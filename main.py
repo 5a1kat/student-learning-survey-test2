@@ -105,46 +105,46 @@ if submit_button:
         st.error("Please provide both your name and email before submitting.")
         df = load_existing_data()
 
-# ==========================================
-# 5. DATA VISUALIZATION
-# ==========================================
-if not df.empty:
-    # --- Metric Row ---
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total Responses", len(df))
-    col2.metric("Avg Engagement", f"{df['Engagement_Level'].mean():.1f}/10")
-    col3.metric("Avg Study Hours", f"{df['Avg_Daily_Study_Hours'].mean():.1f} hrs")
-
-    st.divider()
-
-    # --- Charts Row 1 ---
-    chart_col1, chart_col2 = st.columns(2)
-
-    with chart_col1:
-        st.subheader("Distribution of Preferences")
-        fig1, ax1 = plt.subplots(figsize=(8, 5))
-        sns.countplot(data=df, x='Preferred_Mode', palette='viridis', ax=ax1)
-        ax1.set_ylabel("Number of Students")
-        st.pyplot(fig1)
-
-    with chart_col2:
-        st.subheader("Understanding Rating by Mode")
-        fig2, ax2 = plt.subplots(figsize=(8, 5))
-        sns.boxplot(data=df, x='Preferred_Mode', y='Understanding_Rating', palette='Set2', ax=ax2)
-        st.pyplot(fig2)
-
-    # --- Charts Row 2 ---
-    st.subheader("Impact of Internet Issues on Engagement")
-    fig3, ax3 = plt.subplots(figsize=(12, 5))
-    sns.barplot(data=df, x='Preferred_Mode', y='Engagement_Level', hue='Internet_Issue', ax=ax3)
-    st.pyplot(fig3)
-
-    # --- Raw Data ---
-    with st.expander("View Raw Data Table"):
-        st.dataframe(df, use_container_width=True)
-
-else:
-    st.info("👋 Welcome! No data has been collected yet. Use the sidebar to submit the first response.")
+    # ==========================================
+    # 5. DATA VISUALIZATION
+    # ==========================================
+    if not df.empty:
+        # --- Metric Row ---
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total Responses", len(df))
+        col2.metric("Avg Engagement", f"{df['Engagement_Level'].mean():.1f}/10")
+        col3.metric("Avg Study Hours", f"{df['Avg_Daily_Study_Hours'].mean():.1f} hrs")
+    
+        st.divider()
+    
+        # --- Charts Row 1 ---
+        chart_col1, chart_col2 = st.columns(2)
+    
+        with chart_col1:
+            st.subheader("Distribution of Preferences")
+            fig1, ax1 = plt.subplots(figsize=(8, 5))
+            sns.countplot(data=df, x='Preferred_Mode', palette='viridis', ax=ax1)
+            ax1.set_ylabel("Number of Students")
+            st.pyplot(fig1)
+    
+        with chart_col2:
+            st.subheader("Understanding Rating by Mode")
+            fig2, ax2 = plt.subplots(figsize=(8, 5))
+            sns.boxplot(data=df, x='Preferred_Mode', y='Understanding_Rating', palette='Set2', ax=ax2)
+            st.pyplot(fig2)
+    
+        # --- Charts Row 2 ---
+        st.subheader("Impact of Internet Issues on Engagement")
+        fig3, ax3 = plt.subplots(figsize=(12, 5))
+        sns.barplot(data=df, x='Preferred_Mode', y='Engagement_Level', hue='Internet_Issue', ax=ax3)
+        st.pyplot(fig3)
+    
+        # --- Raw Data ---
+        with st.expander("View Raw Data Table"):
+            st.dataframe(df, use_container_width=True)
+    
+    else:
+        st.info("👋 Welcome! No data has been collected yet. Use the sidebar to submit the first response.")
 
 # ==========================================
 # 6. DOCUMENTATION & FOOTER
