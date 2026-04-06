@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
@@ -30,11 +31,24 @@ def load_existing_data():
     if os.path.exists(DATA_FILE):
         return pd.read_csv(DATA_FILE)
     else:
-        # Define the schema for the data
-        return pd.DataFrame(columns=[
-            'Age', 'Preferred_Mode', 'Avg_Daily_Study_Hours',
-            'Engagement_Level', 'Internet_Issue', 'Understanding_Rating'
-        ])
+        # 1. Create 20 rows of realistic "starter" data
+        np.random.seed(42)
+        seed_data = {
+            'Name': [f"Student_{i}" for i in range(20)],
+            'Email': [f"test{i}@example.com" for i in range(20)],
+            'Age': np.random.randint(18, 25, 20),
+            'Preferred_Mode': np.random.choice(['Online', 'Offline', 'Hybrid'], 20),
+            'Avg_Daily_Study_Hours': np.random.uniform(2, 10, 20).round(1),
+            'Engagement_Level': np.random.randint(4, 11, 20),
+            'Internet_Issue': np.random.choice(['Yes', 'No'], 20),
+            'Understanding_Rating': np.random.randint(3, 11, 20)
+        }
+        
+        df_seed = pd.DataFrame(seed_data)
+        
+        # 2. Save it immediately so the file exists for the next run
+        df_seed.to_csv(DATA_FILE, index=False)
+        return df_seed
 
 
 def save_new_response(data_dict):
