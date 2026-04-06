@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import LabelEncoder
 
 # ==========================================
 # 1. PAGE CONFIGURATION & STYLING
@@ -150,6 +152,53 @@ if submit_button:
 # 6. DOCUMENTATION & FOOTER
 # ==========================================
 st.sidebar.divider()
+st.divider()
+st.header("🔮 AI Student Success Predictor")
+
+if len(df) > 5:  # We need at least a few rows of data to train the AI
+    # --- Prepare the Data for the AI ---
+    # AI only understands numbers, so we convert "Yes/No" and "Mode" into numbers
+    le_mode = LabelEncoder()
+    le_internet = LabelEncoder()
+    
+    # Create a copy for training
+    train_df = df.copy()
+    train_df['Mode_N'] = le_mode.fit_transform(train_df['Preferred_Mode'])
+    train_df['Internet_N'] = le_internet.fit_transform(train_df['Internet_Issue'])
+    
+    # Define Features (X) and Target (y)
+    X = train_df[['Age', 'Avg_Daily_Study_Hours', 'Engagement_Level', 'Mode_N', 'Internet_N']]
+    y = train_df['Understanding_Rating']
+    
+    # --- Train the Model ---
+    model = LinearRegression()
+    model.fit(X, y) # The AI "learns" the patterns here
+    
+    # --- User Input for Prediction ---
+    st.subheader("Check your predicted Understanding Rating:")
+    p_col1, p_col2 = st.columns(2)
+    
+    with p_col1:
+        p_age = st.number_input("Your Age", 10, 100, 20, key="pred_age")
+        p_hours = st.slider("Daily Study Hours", 0.0, 15.0, 5.0, key="pred_hours")
+        p_engage = st.slider("Engagement (1-10)", 1, 10, 7, key="pred_engage")
+        
+    with p_col2:
+        p_mode = st.selectbox("Mode", ["Online", "Offline", "Hybrid"], key="pred_mode")
+        p_internet = st.radio("Frequent Internet Issues?", ["Yes", "No"], key="pred_internet")
+        
+        # Convert user input to the same numbers the AI learned
+        p_mode_n = le_mode.transform([p_mode])[0]
+        p_internet_n = le_internet.transform([p_internet])[0]
+        
+        # Make the Prediction
+        if st.button("Predict My Score"):
+            prediction = model.predict([[p_age, p_hours, p_engage, p_mode_n, p_internet_n]])
+            st.success(f"Based on our data, your predicted Understanding Rating is: **{prediction[0]:.2f} / 10**")
+            st.info("The AI calculates this by comparing your habits to other students in the database.")
+
+else:
+    st.warning("⚠️ AI Predictor requires at least 5 survey responses to start learning trends.")
 st.sidebar.info("""
 **How to use:**
 1. Fill out the form.
