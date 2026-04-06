@@ -96,6 +96,8 @@ with st.sidebar.form("survey_form", clear_on_submit=True):
 # 4. MAIN DASHBOARD LOGIC
 # ==========================================
 st.title("🎓 Online vs. Offline Learning Analysis")
+
+df = load_existing_data()
 st.markdown("""
 This dashboard analyzes real-time student feedback to compare the effectiveness 
 of different learning environments. Submit your data in the sidebar to update the charts!
@@ -119,7 +121,7 @@ if submit_button:
         st.success("Thank you! Your response has been recorded.")
     else:
         st.error("Please provide both your name and email before submitting.")
-        df = load_existing_data()
+       
 
     # ==========================================
     # 5. DATA VISUALIZATION
