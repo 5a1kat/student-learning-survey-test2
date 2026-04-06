@@ -168,7 +168,6 @@ if submit_button:
 # 6. DOCUMENTATION & FOOTER
 # ==========================================
 st.sidebar.divider()
-st.divider()
 st.header("🔮 AI Student Success Predictor")
 
 if len(df) > 5:  # We need at least a few rows of data to train the AI
